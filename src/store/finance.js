@@ -6,7 +6,8 @@ const savedData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
   transactions: [],
   balance: 0,
   income: 0,
-  expense: 0
+  expense: 0,
+  notes: []
 };
 
 export const store = reactive({
@@ -14,16 +15,18 @@ export const store = reactive({
   balance: savedData.balance,
   income: savedData.income,
   expense: savedData.expense,
+  notes: savedData.notes || [],
 
   addTransaction(transaction) {
     const newTransaction = {
       id: Date.now(),
-      date: new Date().toISOString(),
+      date: transaction.date || new Date().toISOString(),
+      source: transaction.source || '',
       ...transaction
     };
 
     this.transactions.unshift(newTransaction);
-    
+
     if (transaction.type === 'income') {
       this.balance += transaction.amount;
       this.income += transaction.amount;
@@ -51,12 +54,47 @@ export const store = reactive({
     }
   },
 
+  addNote(content) {
+    const newNote = {
+      id: Date.now(),
+      content: content,
+      date: new Date().toISOString(),
+      pinned: false
+    };
+    this.notes.unshift(newNote);
+    this.save();
+  },
+
+  deleteNote(id) {
+    const index = this.notes.findIndex(n => n.id === id);
+    if (index !== -1) {
+      this.notes.splice(index, 1);
+      this.save();
+    }
+  },
+
+  togglePinNote(id) {
+    const note = this.notes.find(n => n.id === id);
+    if (note) {
+      note.pinned = !note.pinned;
+      // Re-sort notes: pinned first, then by date desc
+      this.notes.sort((a, b) => {
+        if (a.pinned === b.pinned) {
+          return new Date(b.date) - new Date(a.date);
+        }
+        return a.pinned ? -1 : 1;
+      });
+      this.save();
+    }
+  },
+
   save() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
       transactions: this.transactions,
       balance: this.balance,
       income: this.income,
-      expense: this.expense
+      expense: this.expense,
+      notes: this.notes
     }));
   }
 });
