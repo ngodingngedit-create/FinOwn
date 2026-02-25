@@ -46,6 +46,7 @@ const navigate = (view) => {
   }
   .main-content {
     padding: 1.5rem;
+    padding-bottom: 80px;
   }
 }
 </style>

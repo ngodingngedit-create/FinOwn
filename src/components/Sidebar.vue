@@ -167,16 +167,52 @@ nav {
 
 @media (max-width: 768px) {
   .sidebar {
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    left: 0;
+    right: 0;
     width: 100%;
     height: auto;
-    position: relative;
-    padding: 1.5rem;
+    border-right: none;
+    border-top: 1px solid var(--border);
+    padding: 0.75rem 1rem;
+    flex-direction: row;
+    justify-content: center;
+    gap: 0;
+    z-index: 100;
   }
+  
+  .sidebar-header {
+    display: none;
+  }
+  
+  nav {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+    gap: 0;
+  }
+  
+  .nav-item {
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.5rem;
+    align-items: center;
+    border-radius: 0.5rem;
+    font-size: 0.7rem;
+    width: auto;
+    flex: 1;
+  }
+
+  .nav-item span {
+    display: block !important;
+    opacity: 1 !important;
+  }
+
   .sidebar.collapsed {
     width: 100%;
-  }
-  .toggle-btn {
-    display: none;
+    padding: 0.75rem 1rem;
   }
 }
 </style>
